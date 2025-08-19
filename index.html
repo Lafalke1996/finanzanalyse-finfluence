@@ -1,0 +1,1478 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartKidsInvest - Finanzanalyse</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': {
+                            DEFAULT: '#0a2f5c',
+                            '50': '#e6edf5',
+                            '100': '#ccdaeb',
+                            '200': '#99b6d7',
+                            '300': '#6691c3',
+                            '400': '#336daf',
+                            '500': '#00489b',
+                            '600': '#003a7c',
+                            '700': '#002b5d',
+                            '800': '#001d3e',
+                            '900': '#000e1f',
+                        },
+                        'gold': {
+                            DEFAULT: '#d4af37',
+                            'light': '#f0e6c0',
+                            'dark': '#b38f28',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif'],
+                    },
+                    boxShadow: {
+                        'luxury': '0 4px 20px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(212, 175, 55, 0.2)',
+                        'gold': '0 4px 12px rgba(212, 175, 55, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f0e6c0 50%, #d4af37 100%);
+        }
+        
+        .gold-text {
+            background: linear-gradient(135deg, #d4af37 0%, #f0e6c0 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .luxury-card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .luxury-card:hover {
+            box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(212, 175, 55, 0.2);
+        }
+        
+        .luxury-input {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+        
+        .luxury-input:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            outline: none;
+        }
+        
+        .luxury-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .luxury-button {
+            background: linear-gradient(135deg, #d4af37 0%, #f0e6c0 50%, #d4af37 100%);
+            color: #0a2f5c;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(212, 175, 55, 0.25);
+            border: none;
+        }
+        
+        .luxury-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
+        }
+        
+        .luxury-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(212, 175, 55, 0.2);
+        }
+        
+        .luxury-button-secondary {
+            background: transparent;
+            color: #0a2f5c;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            border: 1px solid #d4af37;
+        }
+        
+        .luxury-button-secondary:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background-color: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37 0%, #f0e6c0 100%);
+            transition: width 0.5s ease;
+        }
+        
+        .checkbox-gold {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 1px solid #d4af37;
+            border-radius: 0.25rem;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox-gold:checked {
+            background-color: #d4af37;
+            border-color: #d4af37;
+        }
+        
+        .checkbox-gold:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.75rem;
+        }
+        
+        .checkbox-gold:focus {
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            outline: none;
+        }
+        
+        .radio-gold {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 1px solid #d4af37;
+            border-radius: 50%;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .radio-gold:checked {
+            border-color: #d4af37;
+            border-width: 4px;
+        }
+        
+        .radio-gold:focus {
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            outline: none;
+        }
+        
+        .page-transition {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .page-enter {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        
+        .page-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .print-break-inside-avoid {
+                break-inside: avoid;
+            }
+            
+            .print-break-before {
+                break-before: page;
+            }
+            
+            body {
+                background-color: white;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .luxury-card {
+                box-shadow: none !important;
+                border: 1px solid #e2e8f0 !important;
+                break-inside: avoid;
+                margin-bottom: 2rem !important;
+            }
+        }
+    
+@media print {
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 2rem;
+    background-color: white;
+    border-top: 1px solid #ccc;
+  }
+}
+
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+  }
+  .font-quicksand {
+    font-family: 'Quicksand', sans-serif;
+  }
+  .gold-text {
+    color: #d4af37;
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&amp;display=swap" rel="stylesheet"/></head>
+<body class="bg-gray-50">
+<header class="bg-gray-100 py-4 border-b border-gray-300 shadow-sm">
+<div class="max-w-6xl mx-auto flex items-center justify-between px-4">
+<div class="flex items-center space-x-4">
+<img alt="SmartKidsInvest Logo" class="h-10 w-auto" src="smartkids-logo.png"/>
+<h1 class="text-2xl font-bold font-quicksand"><span class="text-[#d4af37] font-quicksand">SmartKids</span><span class="text-gray-800 font-quicksand">Invest</span></h1>
+</div>
+<p class="text-sm text-gray-600 font-quicksand">Exklusive Finanzberatung für Familien</p>
+</div>
+</header>
+<div class="container mx-auto px-4 py-8 max-w-5xl">
+<!-- Header -->
+<!-- Progress Bar -->
+<div class="mb-12 no-print">
+<div class="flex justify-between text-sm text-gray-500 mb-2">
+<span>Start</span>
+<span>Abschluss</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+</div>
+</div>
+<!-- Pages Container -->
+<div id="pages-container">
+<!-- Page 1: Persönliche Daten -->
+<div class="page page-visible" id="page-1">
+<div class="luxury-card p-8 mb-8">
+<h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+<span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm mr-3">1</span>
+                        Persönliche Daten
+                    </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="name">Dein Name</label>
+<input class="luxury-input w-full" id="name" placeholder="Vor- und Nachname" type="text"/>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="birthdate">Dein Geburtsdatum</label>
+<input class="luxury-input w-full" id="birthdate" type="date"/>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="profession">Beruf</label>
+<input class="luxury-input w-full" id="profession" placeholder="Aktuelle Tätigkeit" type="text"/>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="income">Wie hoch ist das Haushaltsjahreseinkommen?</label>
+<div class="relative">
+<input class="luxury-input w-full pl-8" id="income" placeholder="z.B. 60.000" type="text"/>
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="text-gray-500">€</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="children-count">Wie viele Kinder hast du?</label>
+<input class="luxury-input w-full" id="children-count" min="0" placeholder="Anzahl der Kinder" type="number"/>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="children-names">Wie heißen deine Kinder? inkl. Geburtsdaten</label>
+<textarea class="luxury-input w-full" id="children-names" placeholder="z.B. Max (01.01.2015), Lisa (03.05.2018)" rows="3"></textarea>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2">Wie sind deine Kinder krankenversichert?</label>
+<div class="flex space-x-6 mt-2">
+<label class="inline-flex items-center">
+<input class="radio-gold" name="insurance-type" type="radio" value="Gesetzlich"/>
+<span class="ml-2">Gesetzlich</span>
+</label>
+<label class="inline-flex items-center">
+<input class="radio-gold" name="insurance-type" type="radio" value="Privat"/>
+<span class="ml-2">Privat</span>
+</label>
+</div>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="insurance-company">Bei welcher Krankenversicherung?</label>
+<input class="luxury-input w-full" id="insurance-company" placeholder="Name der Krankenversicherung" type="text"/>
+</div>
+</div>
+</div>
+<div class="flex justify-end no-print">
+<button class="luxury-button" id="next-1">
+                        Weiter <i class="fas fa-arrow-right ml-2"></i>
+</button>
+</div>
+</div>
+<!-- Page 2: Erwartungshaltung -->
+<div class="page hidden page-enter" id="page-2">
+<div class="luxury-card p-8 mb-8">
+<h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+<span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm mr-3">2</span>
+                        Erwartungshaltung
+                    </h2>
+<div class="space-y-6">
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="experience">Welche Erfahrungen hast du bereits gemacht?</label>
+<textarea class="luxury-input w-full" id="experience" placeholder="Deine bisherigen Erfahrungen mit Finanzprodukten und Anlagen" rows="3"></textarea>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="expectations">Was erwartest du von dem Konzept?</label>
+<textarea class="luxury-input w-full" id="expectations" placeholder="Deine Erwartungen an SmartKidsInvest" rows="3"></textarea>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="recommendation">Was müsste passieren, dass du uns weiterempfiehlst?</label>
+<textarea class="luxury-input w-full" id="recommendation" placeholder="Deine Kriterien für eine Weiterempfehlung" rows="3"></textarea>
+</div>
+</div>
+</div>
+<div class="flex justify-between no-print">
+<button class="luxury-button-secondary" id="prev-2">
+<i class="fas fa-arrow-left mr-2"></i> Zurück
+                    </button>
+<button class="luxury-button" id="next-2">
+                        Weiter <i class="fas fa-arrow-right ml-2"></i>
+</button>
+</div>
+</div>
+<!-- Page 3: Konzepterstellung -->
+<div class="page hidden page-enter" id="page-3">
+<div class="luxury-card p-8 mb-8">
+<h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+<span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm mr-3">3</span>
+                        Konzepterstellung
+                    </h2>
+<div class="space-y-8">
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="goal">Was ist dein Ziel?</label>
+<textarea class="luxury-input w-full" id="goal" placeholder="Beschreibe dein finanzielles Ziel für deine Kinder" rows="2"></textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="monthly-budget">Monatliches Budget</label>
+<div class="relative">
+<input class="luxury-input w-full pl-8" id="monthly-budget" min="0" placeholder="z.B. 100" type="number"/>
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="text-gray-500">€</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="investment-duration">Anlagedauer in Jahren</label>
+<input class="luxury-input w-full" id="investment-duration" max="30" min="1" placeholder="z.B. 18" type="number"/>
+</div>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="savings">Hast du bereits Rücklagen?</label>
+<div class="relative">
+<input class="luxury-input w-full pl-8" id="savings" min="0" placeholder="z.B. 5000" type="number"/>
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="text-gray-500">€</span>
+</div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-semibold text-primary">Vermögensentwicklung</h3>
+<button class="luxury-button-secondary text-sm py-2" id="calculate-btn">
+<i class="fas fa-calculator mr-2"></i> Berechnen
+                                </button>
+</div>
+<div class="bg-white p-4 rounded-lg border border-gray-200">
+<canvas height="300" id="investment-chart"></canvas>
+</div>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6" id="calculation-results">
+<div class="luxury-card p-6">
+<h4 class="text-lg font-semibold mb-2 gold-text">SmartKidsInvest (7% p.a.)</h4>
+<div class="space-y-2">
+<div class="flex justify-between">
+<span class="text-gray-600">Einzahlungen gesamt:</span>
+<span class="font-semibold" id="ski-total-payments">-</span>
+</div>
+<div class="flex justify-between">
+<span class="text-gray-600">Rendite:</span>
+<span class="font-semibold" id="ski-total-interest">-</span>
+</div>
+<div class="flex justify-between text-lg">
+<span class="font-semibold">Endkapital:</span>
+<span class="font-bold text-primary" id="ski-final-amount">-</span>
+</div>
+</div>
+</div>
+<div class="luxury-card p-6">
+<h4 class="text-lg font-semibold mb-2">Sparbuch (0,3% p.a.)</h4>
+<div class="space-y-2">
+<div class="flex justify-between">
+<span class="text-gray-600">Einzahlungen gesamt:</span>
+<span class="font-semibold" id="savings-total-payments">-</span>
+</div>
+<div class="flex justify-between">
+<span class="text-gray-600">Rendite:</span>
+<span class="font-semibold" id="savings-total-interest">-</span>
+</div>
+<div class="flex justify-between text-lg">
+<span class="font-semibold">Endkapital:</span>
+<span class="font-semibold" id="savings-final-amount">-</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 p-6 bg-primary-50 border-l-4 border-gold rounded-r-lg hidden" id="advantage-highlight">
+<h4 class="text-lg font-semibold text-primary mb-2">Dein Vorteil mit SmartKidsInvest</h4>
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-full bg-gold flex items-center justify-center mr-4">
+<i class="fas fa-trophy text-white"></i>
+</div>
+<div>
+<p class="text-gray-700">Mit SmartKidsInvest erzielst du einen Mehrwert von <span class="font-bold text-primary" id="advantage-amount">-</span> gegenüber einem herkömmlichen Sparbuch.</p>
+<p class="text-sm text-gray-600 mt-1">Das entspricht einem Renditeunterschied von <span class="font-semibold" id="advantage-percentage">-</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-between no-print">
+<button class="luxury-button-secondary" id="prev-3">
+<i class="fas fa-arrow-left mr-2"></i> Zurück
+                    </button>
+<button class="luxury-button" id="next-3">
+                        Weiter <i class="fas fa-arrow-right ml-2"></i>
+</button>
+</div>
+</div>
+<!-- Page 4: Absicherungen und Präferenzen -->
+<div class="page hidden page-enter" id="page-4">
+<div class="luxury-card p-8 mb-8">
+<h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+<span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm mr-3">4</span>
+                        Absicherungen und Präferenzen
+                    </h2>
+<div class="space-y-8">
+<div>
+<h3 class="text-xl font-semibold text-primary mb-4">Welche Absicherungen hast du bereits für dein Kind?</h3>
+<div class="space-y-4">
+<div>
+<label class="inline-flex items-center">
+<input class="checkbox-gold insurance-checkbox" type="checkbox" value="Berufsunfähigkeit"/>
+<span class="ml-2">Berufsunfähigkeit</span>
+</label>
+<div class="insurance-details hidden mt-2 ml-7">
+<textarea class="luxury-input w-full" placeholder="Details zur Berufsunfähigkeitsversicherung" rows="2"></textarea>
+</div>
+</div>
+<div>
+<label class="inline-flex items-center">
+<input class="checkbox-gold insurance-checkbox" type="checkbox" value="Krankenzusatz"/>
+<span class="ml-2">Krankenzusatz</span>
+</label>
+<div class="insurance-details hidden mt-2 ml-7">
+<textarea class="luxury-input w-full" placeholder="Details zur Krankenzusatzversicherung" rows="2"></textarea>
+</div>
+</div>
+<div>
+<label class="inline-flex items-center">
+<input class="checkbox-gold insurance-checkbox" type="checkbox" value="Unfallversicherung"/>
+<span class="ml-2">Unfallversicherung</span>
+</label>
+<div class="insurance-details hidden mt-2 ml-7">
+<textarea class="luxury-input w-full" placeholder="Details zur Unfallversicherung" rows="2"></textarea>
+</div>
+</div>
+<div>
+<label class="inline-flex items-center">
+<input class="checkbox-gold insurance-checkbox" type="checkbox" value="Risikoleben"/>
+<span class="ml-2">Risikoleben</span>
+</label>
+<div class="insurance-details hidden mt-2 ml-7">
+<textarea class="luxury-input w-full" placeholder="Details zur Risikolebensversicherung" rows="2"></textarea>
+</div>
+</div>
+<div>
+<label class="inline-flex items-center">
+<input class="checkbox-gold" id="no-insurance" type="checkbox" value="Keine"/>
+<span class="ml-2">Keine</span>
+</label>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-primary mb-4">Was ist dir wichtig?</h3>
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr>
+<th class="text-left py-2 px-4">Aspekt</th>
+<th class="text-center py-2 px-4">Ist dir das wichtig?</th>
+<th class="text-center py-2 px-4">Priorität</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-t border-gray-200">
+<td class="py-4 px-4">Hohe Rendite</td>
+<td class="py-4 px-4 text-center">
+<input class="checkbox-gold preference-checkbox" data-preference="rendite" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="preference-priority hidden">
+<select class="luxury-input luxury-select w-full">
+<option value="Sehr wichtig">Sehr wichtig</option>
+<option value="Wichtig">Wichtig</option>
+<option value="Uninteressant">Uninteressant</option>
+</select>
+</div>
+</td>
+</tr>
+<tr class="border-t border-gray-200">
+<td class="py-4 px-4">Flexibilität</td>
+<td class="py-4 px-4 text-center">
+<input class="checkbox-gold preference-checkbox" data-preference="flexibilität" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="preference-priority hidden">
+<select class="luxury-input luxury-select w-full">
+<option value="Sehr wichtig">Sehr wichtig</option>
+<option value="Wichtig">Wichtig</option>
+<option value="Uninteressant">Uninteressant</option>
+</select>
+</div>
+</td>
+</tr>
+<tr class="border-t border-gray-200">
+<td class="py-4 px-4">Kontrolle des Geldes über dem 18. Lebensjahr hinaus</td>
+<td class="py-4 px-4 text-center">
+<input class="checkbox-gold preference-checkbox" data-preference="kontrolle" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="preference-priority hidden">
+<select class="luxury-input luxury-select w-full">
+<option value="Sehr wichtig">Sehr wichtig</option>
+<option value="Wichtig">Wichtig</option>
+<option value="Uninteressant">Uninteressant</option>
+</select>
+</div>
+</td>
+</tr>
+<tr class="border-t border-gray-200">
+<td class="py-4 px-4">Gesundheit absichern</td>
+<td class="py-4 px-4 text-center">
+<input class="checkbox-gold preference-checkbox" data-preference="gesundheit" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="preference-priority hidden">
+<select class="luxury-input luxury-select w-full">
+<option value="Sehr wichtig">Sehr wichtig</option>
+<option value="Wichtig">Wichtig</option>
+<option value="Uninteressant">Uninteressant</option>
+</select>
+</div>
+</td>
+</tr>
+<tr class="border-t border-gray-200">
+<td class="py-4 px-4">Steuervorteile nutzen</td>
+<td class="py-4 px-4 text-center">
+<input class="checkbox-gold preference-checkbox" data-preference="steuer" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="preference-priority hidden">
+<select class="luxury-input luxury-select w-full">
+<option value="Sehr wichtig">Sehr wichtig</option>
+<option value="Wichtig">Wichtig</option>
+<option value="Uninteressant">Uninteressant</option>
+</select>
+</div>
+</td>
+</tr>
+<tr class="border-t border-gray-200">
+<td class="py-4 px-4">Für den Ernstfall vorsorgen</td>
+<td class="py-4 px-4 text-center">
+<input class="checkbox-gold preference-checkbox" data-preference="ernstfall" type="checkbox"/>
+</td>
+<td class="py-4 px-4">
+<div class="preference-priority hidden">
+<select class="luxury-input luxury-select w-full">
+<option value="Sehr wichtig">Sehr wichtig</option>
+<option value="Wichtig">Wichtig</option>
+<option value="Uninteressant">Uninteressant</option>
+</select>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-primary mb-4">Kapitalimmobilie</h3>
+<div class="mb-4">
+<label class="block text-gray-700 font-medium mb-2">Ist das Thema Kapitalimmobilie für dich interessant?</label>
+<div class="flex space-x-6 mt-2">
+<label class="inline-flex items-center">
+<input class="radio-gold" id="real-estate-yes" name="real-estate-interest" type="radio" value="Ja"/>
+<span class="ml-2">Ja</span>
+</label>
+<label class="inline-flex items-center">
+<input class="radio-gold" id="real-estate-no" name="real-estate-interest" type="radio" value="Nein"/>
+<span class="ml-2">Nein</span>
+</label>
+</div>
+</div>
+<div class="mt-4 hidden" id="berater-selection">
+<label class="block text-gray-700 font-medium mb-2">Berater auswählen</label>
+<select class="luxury-input luxury-select w-full" id="berater-dropdown">
+<option value="137645">Lasse Falke</option>
+<option value="927364">Franziska Maier</option>
+</select>
+</div>
+<div class="mt-6 p-6 bg-primary-50 rounded-lg hidden" id="real-estate-info">
+<h4 class="text-lg font-semibold text-primary mb-3">Vorteile einer Kapitalimmobilie:</h4>
+<p class="text-gray-700 mb-4">Eine Kapitalimmobilie bietet dir langfristige Wertsteigerung, Inflationsschutz und steuerliche Vorteile. Sie ist eine solide Anlage für die Zukunft deiner Familie.</p>
+<h4 class="text-lg font-semibold text-primary mb-3">Voraussetzungen:</h4>
+<ul class="list-disc list-inside text-gray-700 space-y-1 mb-6">
+<li>Singles: Mindestens 2.500€ netto Einkommen</li>
+<li>Paare: Mindestens 3.500€ netto gemeinsames Einkommen</li>
+<li>Eigenkapitalnachweis: 5.000-10.000€ (muss nicht eingesetzt werden)</li>
+<li>Mindestinvestition: 100€ monatlich</li>
+</ul>
+<a class="luxury-button inline-block" href="https://brimo-kapitalanlagen.dokume.app/#/realestate_signup/index/137645" target="_blank">
+                                    Hier registrieren <i class="fas fa-external-link-alt ml-2"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-between no-print">
+<button class="luxury-button-secondary" id="prev-4">
+<i class="fas fa-arrow-left mr-2"></i> Zurück
+                    </button>
+<button class="luxury-button" id="next-4">
+                        Weiter <i class="fas fa-arrow-right ml-2"></i>
+</button>
+</div>
+</div>
+<!-- Page 5: Zusammenfassung -->
+<div class="page hidden page-enter" id="page-5">
+<div class="luxury-card p-8 mb-8">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-primary flex items-center">
+<span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm mr-3">5</span>
+                            Zusammenfassung
+                        </h2>
+</div>
+<div class="space-y-8">
+<!-- Persönliche Daten Zusammenfassung -->
+<div class="print-break-inside-avoid">
+<h3 class="text-xl font-semibold text-primary mb-4 pb-2 border-b border-gray-200">Persönliche Daten</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+<div>
+<p class="text-gray-600 text-sm">Name</p>
+<p class="font-medium" id="summary-name">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Geburtsdatum</p>
+<p class="font-medium" id="summary-birthdate">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Beruf</p>
+<p class="font-medium" id="summary-profession">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Haushaltsjahreseinkommen</p>
+<p class="font-medium" id="summary-income">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Anzahl Kinder</p>
+<p class="font-medium" id="summary-children-count">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Kinder (mit Geburtsdaten)</p>
+<p class="font-medium" id="summary-children-names">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Krankenversicherung</p>
+<p class="font-medium" id="summary-insurance-type">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Krankenversicherungsgesellschaft</p>
+<p class="font-medium" id="summary-insurance-company">-</p>
+</div>
+</div>
+</div>
+<!-- Erwartungshaltung Zusammenfassung -->
+<div class="print-break-inside-avoid">
+<h3 class="text-xl font-semibold text-primary mb-4 pb-2 border-b border-gray-200">Erwartungshaltung</h3>
+<div class="space-y-4">
+<div>
+<p class="text-gray-600 text-sm">Bisherige Erfahrungen</p>
+<p class="font-medium" id="summary-experience">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Erwartungen an das Konzept</p>
+<p class="font-medium" id="summary-expectations">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Kriterien für Weiterempfehlung</p>
+<p class="font-medium" id="summary-recommendation">-</p>
+</div>
+</div>
+</div>
+<!-- Konzepterstellung Zusammenfassung -->
+<div class="print-break-inside-avoid print-break-before">
+<h3 class="text-xl font-semibold text-primary mb-4 pb-2 border-b border-gray-200">Konzepterstellung</h3>
+<div class="space-y-6">
+<div>
+<p class="text-gray-600 text-sm">Finanzielles Ziel</p>
+<p class="font-medium" id="summary-goal">-</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div>
+<p class="text-gray-600 text-sm">Monatliches Budget</p>
+<p class="font-medium" id="summary-monthly-budget">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Anlagedauer</p>
+<p class="font-medium" id="summary-investment-duration">-</p>
+</div>
+<div>
+<p class="text-gray-600 text-sm">Vorhandene Rücklagen</p>
+<p class="font-medium" id="summary-savings">-</p>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold text-primary mb-4">Vermögensentwicklung</h4>
+<div class="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+<canvas height="300" id="summary-chart"></canvas>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="luxury-card p-6">
+<h4 class="text-lg font-semibold mb-2 gold-text">SmartKidsInvest (7% p.a.)</h4>
+<div class="space-y-2">
+<div class="flex justify-between">
+<span class="text-gray-600">Einzahlungen gesamt:</span>
+<span class="font-semibold" id="summary-ski-total-payments">-</span>
+</div>
+<div class="flex justify-between">
+<span class="text-gray-600">Rendite:</span>
+<span class="font-semibold" id="summary-ski-total-interest">-</span>
+</div>
+<div class="flex justify-between text-lg">
+<span class="font-semibold">Endkapital:</span>
+<span class="font-bold text-primary" id="summary-ski-final-amount">-</span>
+</div>
+</div>
+</div>
+<div class="luxury-card p-6">
+<h4 class="text-lg font-semibold mb-2">Sparbuch (0,3% p.a.)</h4>
+<div class="space-y-2">
+<div class="flex justify-between">
+<span class="text-gray-600">Einzahlungen gesamt:</span>
+<span class="font-semibold" id="summary-savings-total-payments">-</span>
+</div>
+<div class="flex justify-between">
+<span class="text-gray-600">Rendite:</span>
+<span class="font-semibold" id="summary-savings-total-interest">-</span>
+</div>
+<div class="flex justify-between text-lg">
+<span class="font-semibold">Endkapital:</span>
+<span class="font-semibold" id="summary-savings-final-amount">-</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 p-6 bg-primary-50 border-l-4 border-gold rounded-r-lg" id="summary-advantage-highlight">
+<h4 class="text-lg font-semibold text-primary mb-2">Dein Vorteil mit SmartKidsInvest</h4>
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-full bg-gold flex items-center justify-center mr-4">
+<i class="fas fa-trophy text-white"></i>
+</div>
+<div>
+<p class="text-gray-700">Mit SmartKidsInvest erzielst du einen Mehrwert von <span class="font-bold text-primary" id="summary-advantage-amount">-</span> gegenüber einem herkömmlichen Sparbuch.</p>
+<p class="text-sm text-gray-600 mt-1">Das entspricht einem Renditeunterschied von <span class="font-semibold" id="summary-advantage-percentage">-</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Absicherungen und Präferenzen Zusammenfassung -->
+<div class="print-break-inside-avoid print-break-before">
+<h3 class="text-xl font-semibold text-primary mb-4 pb-2 border-b border-gray-200">Absicherungen und Präferenzen</h3>
+<div class="space-y-6">
+<div>
+<h4 class="text-lg font-semibold text-primary mb-3">Vorhandene Absicherungen</h4>
+<div id="summary-insurances">
+<p class="text-gray-500 italic">Keine Angaben</p>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold text-primary mb-3">Wichtige Aspekte</h4>
+<div id="summary-preferences">
+<p class="text-gray-500 italic">Keine Angaben</p>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold text-primary mb-3">Interesse an Kapitalimmobilie</h4>
+<p class="font-medium" id="summary-real-estate-interest">-</p>
+</div>
+</div>
+</div>
+<!-- Abschluss -->
+<div class="print-break-inside-avoid">
+<div class="p-6 bg-primary rounded-lg text-white">
+<h3 class="text-xl font-bold mb-3">Vielen Dank für dein Vertrauen!</h3>
+<p>Diese Finanzanalyse wurde erstellt am <span class="font-medium" id="summary-date"></span> und dient als Grundlage für deine individuelle Beratung bei SmartKidsInvest.</p>
+<div class="mt-4 flex items-center">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+<i class="fas fa-chart-line text-primary text-lg"></i>
+</div>
+<div>
+<p class="font-bold gold-text">SmartKidsInvest</p>
+<p class="text-sm">Professionelle Finanzlösungen für deine Familie</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-between no-print">
+<button class="luxury-button-secondary" id="prev-5">
+<i class="fas fa-arrow-left mr-2"></i> Zurück
+                    </button>
+<button class="luxury-button mr-4" id="print-btn"><i class="fas fa-print mr-2"></i> Finanzanalyse drucken</button>
+<button class="luxury-button" id="restart-btn">
+<i class="fas fa-redo mr-2"></i> Neue Analyse starten
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+    const realEstateYes = document.getElementById('real-estate-yes');
+    const beraterDropdown = document.getElementById('berater-dropdown');
+    const beraterBox = document.getElementById('berater-selection');
+    const registerLink = document.querySelector('#real-estate-info a');
+
+    realEstateYes?.addEventListener('change', () => {
+      if (realEstateYes.checked) {
+        beraterBox.classList.remove('hidden');
+      }
+    });
+
+    beraterDropdown?.addEventListener('change', () => {
+      const beraterId = beraterDropdown.value;
+      registerLink.href = `https://brimo-kapitalanlagen.dokume.app/#/realestate_signup/index/${beraterId}`;
+    });
+
+            // Variables
+            const pages = document.querySelectorAll('.page');
+            const progressFill = document.getElementById('progress-fill');
+            let currentPage = 1;
+            let totalPages = pages.length;
+            let investmentChart = null;
+            let summaryChart = null;
+            let calculationData = null;
+            
+            // Initialize
+            updateProgressBar();
+            
+            // Navigation buttons
+            document.getElementById('next-1').addEventListener('click', () => navigateToPage(2));
+            document.getElementById('prev-2').addEventListener('click', () => navigateToPage(1));
+            document.getElementById('next-2').addEventListener('click', () => navigateToPage(3));
+            document.getElementById('prev-3').addEventListener('click', () => navigateToPage(2));
+            document.getElementById('next-3').addEventListener('click', () => navigateToPage(4));
+            document.getElementById('prev-4').addEventListener('click', () => navigateToPage(3));
+            document.getElementById('next-4').addEventListener('click', () => {
+                generateSummary();
+                navigateToPage(5);
+            });
+            document.getElementById('prev-5').addEventListener('click', () => navigateToPage(4));
+            document.getElementById('restart-btn').addEventListener('click', restartAnalysis);
+            
+            // Calculate button
+            document.getElementById('calculate-btn').addEventListener('click', calculateInvestment);
+            
+            // Print button
+            document.getElementById('print-btn').addEventListener('click', printAnalysis);
+            
+            // Insurance checkboxes
+            const insuranceCheckboxes = document.querySelectorAll('.insurance-checkbox');
+            const noInsuranceCheckbox = document.getElementById('no-insurance');
+            
+            insuranceCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const detailsDiv = this.parentElement.nextElementSibling;
+                    if (this.checked) {
+                        detailsDiv.classList.remove('hidden');
+                        noInsuranceCheckbox.checked = false;
+                    } else {
+                        detailsDiv.classList.add('hidden');
+                    }
+                });
+            });
+            
+            noInsuranceCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    insuranceCheckboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                        const detailsDiv = checkbox.parentElement.nextElementSibling;
+                        detailsDiv.classList.add('hidden');
+                    });
+                }
+            });
+            
+            // Preference checkboxes
+            const preferenceCheckboxes = document.querySelectorAll('.preference-checkbox');
+            
+            preferenceCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const priorityDiv = this.closest('td').nextElementSibling.querySelector('.preference-priority');
+                    if (this.checked) {
+                        priorityDiv.classList.remove('hidden');
+                    } else {
+                        priorityDiv.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Real estate interest
+            document.getElementById('real-estate-yes').addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('real-estate-info').classList.remove('hidden');
+                }
+            });
+            
+            document.getElementById('real-estate-no').addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('real-estate-info').classList.add('hidden');
+                }
+            });
+            
+            // Functions
+            function navigateToPage(pageNumber) {
+                if (pageNumber < 1 || pageNumber > totalPages) return;
+                
+                // Hide current page
+                pages[currentPage - 1].classList.add('page-enter');
+                pages[currentPage - 1].classList.remove('page-visible');
+                
+                setTimeout(() => {
+                    pages[currentPage - 1].classList.add('hidden');
+                    
+                    // Show new page
+                    currentPage = pageNumber;
+                    pages[currentPage - 1].classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        pages[currentPage - 1].classList.remove('page-enter');
+                        pages[currentPage - 1].classList.add('page-visible');
+                        updateProgressBar();
+                    }, 50);
+                }, 300);
+            }
+            
+            function updateProgressBar() {
+                const progress = ((currentPage - 1) / (totalPages - 1)) * 100;
+                progressFill.style.width = `${progress}%`;
+            }
+            
+            function calculateInvestment() {
+                const monthlyBudget = parseFloat(document.getElementById('monthly-budget').value) || 0;
+                const investmentDuration = parseInt(document.getElementById('investment-duration').value) || 0;
+                const initialSavings = parseFloat(document.getElementById('savings').value) || 0;
+                
+                if (monthlyBudget <= 0 || investmentDuration <= 0) {
+                    alert('Bitte gib ein monatliches Budget und eine Anlagedauer ein.');
+                    return;
+                }
+                
+                // Calculate investment growth
+                const skiRate = 0.07; // 7% annual return
+                const savingsRate = 0.003; // 0.3% annual return
+                
+                const years = Array.from({length: investmentDuration + 1}, (_, i) => i);
+                const skiValues = [];
+                const savingsValues = [];
+                
+                let skiValue = initialSavings;
+                let savingsValue = initialSavings;
+                
+                skiValues.push(skiValue);
+                savingsValues.push(savingsValue);
+                
+                for (let year = 1; year <= investmentDuration; year++) {
+                    skiValue = skiValue * (1 + skiRate) + monthlyBudget * 12;
+                    savingsValue = savingsValue * (1 + savingsRate) + monthlyBudget * 12;
+                    
+                    skiValues.push(skiValue);
+                    savingsValues.push(savingsValue);
+                }
+                
+                // Store calculation data for summary
+                calculationData = {
+                    monthlyBudget,
+                    investmentDuration,
+                    initialSavings,
+                    years,
+                    skiValues,
+                    savingsValues
+                };
+                
+                // Calculate totals
+                const totalPayments = initialSavings + (monthlyBudget * 12 * investmentDuration);
+                const skiFinalAmount = skiValues[skiValues.length - 1];
+                const savingsFinalAmount = savingsValues[savingsValues.length - 1];
+                const skiTotalInterest = skiFinalAmount - totalPayments;
+                const savingsTotalInterest = savingsFinalAmount - totalPayments;
+                const advantage = skiFinalAmount - savingsFinalAmount;
+                const advantagePercentage = ((skiFinalAmount / savingsFinalAmount) - 1) * 100;
+                
+                // Update results
+                document.getElementById('ski-total-payments').textContent = formatCurrency(totalPayments);
+                document.getElementById('ski-total-interest').textContent = formatCurrency(skiTotalInterest);
+                document.getElementById('ski-final-amount').textContent = formatCurrency(skiFinalAmount);
+                
+                document.getElementById('savings-total-payments').textContent = formatCurrency(totalPayments);
+                document.getElementById('savings-total-interest').textContent = formatCurrency(savingsTotalInterest);
+                document.getElementById('savings-final-amount').textContent = formatCurrency(savingsFinalAmount);
+                
+                document.getElementById('advantage-amount').textContent = formatCurrency(advantage);
+                document.getElementById('advantage-percentage').textContent = formatPercentage(advantagePercentage);
+                document.getElementById('advantage-highlight').classList.remove('hidden');
+                
+                // Create or update chart
+                createOrUpdateChart(years, skiValues, savingsValues);
+            }
+            
+            function createOrUpdateChart(years, skiValues, savingsValues) {
+                const ctx = document.getElementById('investment-chart').getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (investmentChart) {
+                    investmentChart.destroy();
+                }
+                
+                // Create new chart
+                investmentChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'SmartKidsInvest (7% p.a.)',
+                                data: skiValues,
+                                borderColor: '#d4af37',
+                                backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Sparbuch (0,3% p.a.)',
+                                data: savingsValues,
+                                borderColor: '#0a2f5c',
+                                backgroundColor: 'rgba(10, 47, 92, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += formatCurrency(context.parsed.y);
+                                        return label;
+                                    }
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Jahre'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Vermögen (€)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return formatCurrency(value, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function generateSummary() {
+                // Personal data
+                document.getElementById('summary-name').textContent = document.getElementById('name').value || '-';
+                document.getElementById('summary-birthdate').textContent = formatDate(document.getElementById('birthdate').value) || '-';
+                document.getElementById('summary-profession').textContent = document.getElementById('profession').value || '-';
+                document.getElementById('summary-income').textContent = formatCurrency(document.getElementById('income').value) || '-';
+                document.getElementById('summary-children-count').textContent = document.getElementById('children-count').value || '-';
+                document.getElementById('summary-children-names').textContent = document.getElementById('children-names').value || '-';
+                
+                const insuranceType = document.querySelector('input[name="insurance-type"]:checked');
+                document.getElementById('summary-insurance-type').textContent = insuranceType ? insuranceType.value : '-';
+                document.getElementById('summary-insurance-company').textContent = document.getElementById('insurance-company').value || '-';
+                
+                // Expectations
+                document.getElementById('summary-experience').textContent = document.getElementById('experience').value || '-';
+                document.getElementById('summary-expectations').textContent = document.getElementById('expectations').value || '-';
+                document.getElementById('summary-recommendation').textContent = document.getElementById('recommendation').value || '-';
+                
+                // Concept
+                document.getElementById('summary-goal').textContent = document.getElementById('goal').value || '-';
+                document.getElementById('summary-monthly-budget').textContent = formatCurrency(document.getElementById('monthly-budget').value) || '-';
+                document.getElementById('summary-investment-duration').textContent = document.getElementById('investment-duration').value ? `${document.getElementById('investment-duration').value} Jahre` : '-';
+                document.getElementById('summary-savings').textContent = formatCurrency(document.getElementById('savings').value) || '-';
+                
+                // Investment calculation
+                if (calculationData) {
+                    // Copy calculation results
+                    document.getElementById('summary-ski-total-payments').textContent = document.getElementById('ski-total-payments').textContent;
+                    document.getElementById('summary-ski-total-interest').textContent = document.getElementById('ski-total-interest').textContent;
+                    document.getElementById('summary-ski-final-amount').textContent = document.getElementById('ski-final-amount').textContent;
+                    
+                    document.getElementById('summary-savings-total-payments').textContent = document.getElementById('savings-total-payments').textContent;
+                    document.getElementById('summary-savings-total-interest').textContent = document.getElementById('savings-total-interest').textContent;
+                    document.getElementById('summary-savings-final-amount').textContent = document.getElementById('savings-final-amount').textContent;
+                    
+                    document.getElementById('summary-advantage-amount').textContent = document.getElementById('advantage-amount').textContent;
+                    document.getElementById('summary-advantage-percentage').textContent = document.getElementById('advantage-percentage').textContent;
+                    
+                    // Create summary chart
+                    const summaryCtx = document.getElementById('summary-chart').getContext('2d');
+                    
+                    // Destroy existing chart if it exists
+                    if (summaryChart) {
+                        summaryChart.destroy();
+                    }
+                    
+                    // Create new chart
+                    summaryChart = new Chart(summaryCtx, {
+                        type: 'line',
+                        data: {
+                            labels: calculationData.years,
+                            datasets: [
+                                {
+                                    label: 'SmartKidsInvest (7% p.a.)',
+                                    data: calculationData.skiValues,
+                                    borderColor: '#d4af37',
+                                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Sparbuch (0,3% p.a.)',
+                                    data: calculationData.savingsValues,
+                                    borderColor: '#0a2f5c',
+                                    backgroundColor: 'rgba(10, 47, 92, 0.1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false,
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            label += formatCurrency(context.parsed.y);
+                                            return label;
+                                        }
+                                    }
+                                },
+                                legend: {
+                                    position: 'top',
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Jahre'
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Vermögen (€)'
+                                    },
+                                    ticks: {
+                                        callback: function(value) {
+                                            return formatCurrency(value, false);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // Insurances
+                const insurancesDiv = document.getElementById('summary-insurances');
+                const selectedInsurances = [];
+                
+                document.querySelectorAll('.insurance-checkbox:checked').forEach(checkbox => {
+                    const value = checkbox.value;
+                    const details = checkbox.parentElement.nextElementSibling.querySelector('textarea').value;
+                    selectedInsurances.push({ type: value, details: details });
+                });
+                
+                if (document.getElementById('no-insurance').checked) {
+                    selectedInsurances.push({ type: 'Keine', details: '' });
+                }
+                
+                if (selectedInsurances.length > 0) {
+                    let insuranceHtml = '<ul class="space-y-2">';
+                    selectedInsurances.forEach(insurance => {
+                        insuranceHtml += `<li><span class="font-medium">${insurance.type}</span>`;
+                        if (insurance.details) {
+                            insuranceHtml += `<p class="text-gray-600 text-sm mt-1">${insurance.details}</p>`;
+                        }
+                        insuranceHtml += '</li>';
+                    });
+                    insuranceHtml += '</ul>';
+                    insurancesDiv.innerHTML = insuranceHtml;
+                } else {
+                    insurancesDiv.innerHTML = '<p class="text-gray-500 italic">Keine Angaben</p>';
+                }
+                
+                // Preferences
+                const preferencesDiv = document.getElementById('summary-preferences');
+                const selectedPreferences = [];
+                
+                document.querySelectorAll('.preference-checkbox:checked').forEach(checkbox => {
+                    const preference = checkbox.dataset.preference;
+                    const priority = checkbox.closest('tr').querySelector('select').value;
+                    selectedPreferences.push({ type: preference, priority: priority });
+                });
+                
+                if (selectedPreferences.length > 0) {
+                    let preferencesHtml = '<ul class="space-y-2">';
+                    selectedPreferences.forEach(pref => {
+                        preferencesHtml += `<li><span class="font-medium">${capitalizeFirstLetter(pref.type)}</span>: <span class="text-primary">${pref.priority}</span></li>`;
+                    });
+                    preferencesHtml += '</ul>';
+                    preferencesDiv.innerHTML = preferencesHtml;
+                } else {
+                    preferencesDiv.innerHTML = '<p class="text-gray-500 italic">Keine Angaben</p>';
+                }
+                
+                // Real estate interest
+                const realEstateInterest = document.querySelector('input[name="real-estate-interest"]:checked');
+                document.getElementById('summary-real-estate-interest').textContent = realEstateInterest ? realEstateInterest.value : '-';
+                
+                // Date
+                document.getElementById('summary-date').textContent = formatDate(new Date());
+            }
+            
+            function printAnalysis() {
+                window.print();
+            }
+            
+            function restartAnalysis() {
+                // Reset form fields
+                document.querySelectorAll('input:not([type="radio"]):not([type="checkbox"])').forEach(input => {
+                    input.value = '';
+                });
+                
+                document.querySelectorAll('textarea').forEach(textarea => {
+                    textarea.value = '';
+                });
+                
+                document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                    input.checked = false;
+                });
+                
+                // Reset calculation data
+                calculationData = null;
+                
+                // Hide details sections
+                document.querySelectorAll('.insurance-details, .preference-priority, #real-estate-info, #advantage-highlight').forEach(el => {
+                    el.classList.add('hidden');
+                });
+                
+                // Reset charts
+                if (investmentChart) {
+                    investmentChart.destroy();
+                    investmentChart = null;
+                }
+                
+                if (summaryChart) {
+                    summaryChart.destroy();
+                    summaryChart = null;
+                }
+                
+                // Reset calculation results
+                document.getElementById('ski-total-payments').textContent = '-';
+                document.getElementById('ski-total-interest').textContent = '-';
+                document.getElementById('ski-final-amount').textContent = '-';
+                document.getElementById('savings-total-payments').textContent = '-';
+                document.getElementById('savings-total-interest').textContent = '-';
+                document.getElementById('savings-final-amount').textContent = '-';
+                
+                // Navigate to first page
+                navigateToPage(1);
+            }
+            
+            // Helper functions
+            function formatCurrency(value, includeSymbol = true) {
+                if (!value) return includeSymbol ? '0,00 €' : '0';
+                
+                const num = parseFloat(value);
+                const formatted = num.toLocaleString('de-DE', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                
+                return includeSymbol ? `${formatted} €` : formatted;
+            }
+            
+            function formatPercentage(value) {
+                if (!value) return '0%';
+                
+                const num = parseFloat(value);
+                const formatted = num.toLocaleString('de-DE', {
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1
+                });
+                
+                return `${formatted}%`;
+            }
+            
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                
+                const date = new Date(dateString);
+                return date.toLocaleDateString('de-DE');
+            }
+            
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94f9c430c46de515',t:'MTc0OTkwMzQ2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<!-- Professioneller Footer -->
+<footer class="bg-[#0e1e3a] text-white mt-12 py-8 px-4 no-print">
+<div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+<div class="flex items-center space-x-4">
+<img alt="Lion Finance Logo" class="h-12 w-auto" src="Logo_transparent-removebg-preview (1).png"/>
+<div>
+<p class="font-bold text-lg">SmartKidsInvest</p>
+<p class="text-sm">Lise-Meitner-Straße 9<br/>24223 Schwentinental</p>
+</div>
+</div>
+<div class="text-center md:text-right">
+<p class="text-sm">Kontakt: <a class="text-gold hover:underline" href="mailto:info@smartkidsinvest.de">info@smartkidsinvest.de</a></p>
+<p class="text-xs text-gray-400 mt-1">© SmartKidsInvest – Alle Rechte vorbehalten</p>
+</div>
+</div>
+</footer>
+<!-- Footer für Druckversion auf letzter Seite -->
+<footer class="print-footer hidden no-print:block">
+<div class="text-center text-sm text-gray-600 mt-12 border-t pt-4">
+<img alt="SmartKidsInvest Logo" class="h-10 mx-auto mb-2" src="Logo_transparent-removebg-preview (1).png"/>
+<p>SmartKidsInvest – Lise-Meitner-Straße 9, 24223 Schwentinental</p>
+<p>info@smartkidsinvest.de</p>
+</div>
+</footer>
+</body>
+</html>
