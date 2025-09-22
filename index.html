@@ -289,7 +289,7 @@
 <div class="max-w-6xl mx-auto flex items-center justify-between px-4">
 <div class="flex items-center space-x-4">
 <img alt="finfluence_logo" class="h-10 w-auto" src="finfluence_logo.png"/>
-<h1 class="text-2xl font-bold font-quicksand"><span class="text-[#09420a] font-quicksand">Fin</span><span class="text-gray-800 font-quicksand">Fluence</span></h1>
+<h1 class="text-2xl font-bold font-quicksand"><span class="text-[#09420a] font-quicksand">Fin-</span><span class="text-gray-800 font-quicksand">Fluence</span></h1>
 </div>
 <p class="text-sm text-gray-600 font-quicksand">Exklusive Finanzberatung für Influencer</p>
 </div>
@@ -327,6 +327,14 @@
 <div>
 <label class="block text-gray-700 font-medium mb-2" for="profession">Beruf</label>
 <input class="luxury-input w-full" id="profession" placeholder="Aktuelle Tätigkeit" type="text"/>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="profession">Familienstand</label>
+<input class="luxury-input w-full" id="familienstand" placeholder="ledig" type="text"/>
+</div>
+<div>
+<label class="block text-gray-700 font-medium mb-2" for="profession">Adresse</label>
+<input class="luxury-input w-full" id="adresse" placeholder="Adresse" type="text"/>
 </div>
 <div>
 <label class="block text-gray-700 font-medium mb-2" for="income">Wie hoch ist dein Jahreseinkommen?</label>
@@ -1215,6 +1223,8 @@
                 document.getElementById('summary-name').textContent = document.getElementById('name').value || '-';
                 document.getElementById('summary-birthdate').textContent = formatDate(document.getElementById('birthdate').value) || '-';
                 document.getElementById('summary-profession').textContent = document.getElementById('profession').value || '-';
+                document.getElementById('summary-familienstand').textContent = document.getElementById('familienstand').value || '-';
+                document.getElementById('summary-adresse').textContent = document.getElementById('adresse').value || '-';
                 document.getElementById('summary-income').textContent = formatCurrency(document.getElementById('income').value) || '-';
                 document.getElementById('summary-children-count').textContent = document.getElementById('children-count').value || '-';
                 document.getElementById('summary-children-names').textContent = document.getElementById('children-names').value || '-';
